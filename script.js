@@ -18,27 +18,138 @@ if (header) {
   );
 }
 
-const menuToggle = document.querySelector(".menu-toggle");
-const mobileMenu = document.querySelector(".mobile-menu");
+document.addEventListener("DOMContentLoaded", () => {
+  const body = document.body;
 
-if (menuToggle && mobileMenu) {
-  menuToggle.addEventListener("click", () => {
-    const open = mobileMenu.classList.toggle("open");
+  const header =
+    document.querySelector(".site-header");
 
-    body.classList.toggle("menu-open", open);
+  const menuToggle =
+    document.querySelector(".menu-toggle");
 
-    menuToggle.setAttribute("aria-expanded", String(open));
+  const mobileMenu =
+    document.querySelector(".mobile-menu");
+
+  const mobileLinks =
+    document.querySelectorAll(
+      ".mobile-menu a"
+    );
+
+  function updateHeader() {
+    if (!header) return;
+
+    if (window.scrollY > 30) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  }
+
+  updateHeader();
+
+  window.addEventListener(
+    "scroll",
+    updateHeader,
+    {
+      passive: true
+    }
+  );
+
+  if (
+    !menuToggle ||
+    !mobileMenu
+  ) {
+    return;
+  }
+
+  function openMenu() {
+    mobileMenu.classList.add("open");
+
+    body.classList.add("menu-open");
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      "true"
+    );
+
+    menuToggle.setAttribute(
+      "aria-label",
+      "Close menu"
+    );
+  }
+
+  function closeMenu() {
+    mobileMenu.classList.remove("open");
+
+    body.classList.remove("menu-open");
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+    menuToggle.setAttribute(
+      "aria-label",
+      "Open menu"
+    );
+  }
+
+  function toggleMenu() {
+    const isOpen =
+      mobileMenu.classList.contains(
+        "open"
+      );
+
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
+
+  menuToggle.addEventListener(
+    "click",
+    toggleMenu
+  );
+
+  mobileLinks.forEach((link) => {
+    link.addEventListener(
+      "click",
+      () => {
+        closeMenu();
+      }
+    );
   });
 
-  document.querySelectorAll(".mobile-menu a").forEach((link) => {
-    link.addEventListener("click", () => {
-      mobileMenu.classList.remove("open");
-      body.classList.remove("menu-open");
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        event.key === "Escape" &&
+        mobileMenu.classList.contains(
+          "open"
+        )
+      ) {
+        closeMenu();
+        menuToggle.focus();
+      }
+    }
+  );
 
-      menuToggle.setAttribute("aria-expanded", "false");
-    });
-  });
-}
+  window.addEventListener(
+    "resize",
+    () => {
+      if (
+        window.innerWidth > 991 &&
+        mobileMenu.classList.contains(
+          "open"
+        )
+      ) {
+        closeMenu();
+      }
+    }
+  );
+});
 
 const revealElements = document.querySelectorAll(".reveal");
 
@@ -98,28 +209,6 @@ if (yearElement) {
   yearElement.textContent = new Date().getFullYear();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const visionGradient = document.getElementById("visionGradientBlinds");
-
-  if (visionGradient && typeof window.initGradientBlinds === "function") {
-    window.initGradientBlinds(visionGradient, {
-      gradientColors: ["#233154", "#D7B15E", "#233154"],
-      angle: 0,
-      noise: 0.3,
-      blindCount: 16,
-      blindMinWidth: 60,
-      mouseDampening: 0.15,
-      mirrorGradient: false,
-      spotlightRadius: 0.5,
-      spotlightSoftness: 1,
-      spotlightOpacity: 1,
-      distortAmount: 0,
-      shineDirection: "left",
-      mixBlendMode: "lighten",
-      lightMode: false,
-    });
-  }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const carousel = document.querySelector(".services-carousel");
@@ -302,413 +391,249 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //Gallery Section
 document.addEventListener("DOMContentLoaded", () => {
-  const gallery =
-    document.querySelector(
-      ".gallery"
-    );
+  const gallery = document.querySelector(".gallery");
 
   if (!gallery) return;
 
-  const columns =
-    gallery.querySelectorAll(
-      ".gallery-column"
-    );
+  const columns = [
+    gallery.querySelector(".gallery-column-up"),
+    gallery.querySelector(".gallery-column-down"),
+  ];
 
-  if (
-    columns.length < 2
-  ) {
+  const tracks = [
+    gallery.querySelector(".gallery-column-up .gallery-column-track"),
+    gallery.querySelector(".gallery-column-down .gallery-column-track"),
+  ];
+
+  if (!columns[0] || !columns[1] || !tracks[0] || !tracks[1]) {
     return;
   }
 
   const speed = 35;
+  const imageCount = 9;
 
-  const tracks =
-    gallery.querySelectorAll(
-      ".gallery-column-track"
-    );
+  let loopHeight = 0;
+  let positionLeft = 0;
+  let positionRight = 0;
 
-  const originalItems =
-    [];
+  let pausedLeft = false;
+  let pausedRight = false;
 
-  tracks.forEach(
-    (track) => {
-      originalItems.push(
-        [
-          ...track.children
-        ]
-      );
+  let animationFrame = null;
+  let lastTime = performance.now();
+
+  /* Duplicate the 9-image sequence */
+
+  tracks.forEach((track) => {
+    const originalItems = Array.from(track.children);
+
+    if (originalItems.length !== imageCount) {
+      return;
     }
-  );
 
-  function prepareTrack(
-    track
-  ) {
-    const items =
-      [
-        ...track.children
-      ];
+    originalItems.forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    });
+  });
 
-    items.forEach(
-      (item) => {
-        const clone =
-          item.cloneNode(
-            true
-          );
+  /* Calculate exactly one 9-image sequence */
 
-        track.appendChild(
-          clone
-        );
+  function calculateLoopHeight() {
+    const first = tracks[0].children[0];
+    const secondSetFirst = tracks[0].children[imageCount];
+
+    if (!first || !secondSetFirst) {
+      return;
+    }
+
+    loopHeight = secondSetFirst.offsetTop - first.offsetTop;
+  }
+
+  /* Render */
+
+  function render() {
+    // LEFT COLUMN → physically UP
+    tracks[0].style.transform = `translate3d(0, ${-positionLeft}px, 0)`;
+
+    // RIGHT COLUMN → physically DOWN
+    tracks[1].style.transform = `translate3d(0, ${positionRight}px, 0)`;
+  }
+
+  function animate(currentTime) {
+    const delta = Math.min(currentTime - lastTime, 50) / 1000;
+
+    lastTime = currentTime;
+
+    // LEFT → UP
+    if (!pausedLeft && loopHeight > 0) {
+      positionLeft += speed * delta;
+
+      if (positionLeft >= loopHeight) {
+        positionLeft -= loopHeight;
       }
-    );
-  }
-
-  tracks.forEach(
-    (track) => {
-      prepareTrack(track);
-    }
-  );
-
-  let positions = [
-    0,
-    0
-  ];
-
-  let lastTime =
-    performance.now();
-
-  let animationFrame =
-    null;
-
-  let paused = [
-    false,
-    false
-  ];
-
-  function getLoopHeight(
-    track
-  ) {
-    const originalCount =
-      track.children.length /
-      2;
-
-    if (!originalCount) {
-      return 0;
     }
 
-    const first =
-      track.children[0];
+    // RIGHT → DOWN
+    if (!pausedRight && loopHeight > 0) {
+      positionRight += speed * delta;
 
-    const repeated =
-      track.children[
-        originalCount
-      ];
-
-    if (
-      !first ||
-      !repeated
-    ) {
-      return 0;
-    }
-
-    return (
-      repeated.offsetTop -
-      first.offsetTop
-    );
-  }
-
-  function animate(
-    currentTime
-  ) {
-    const delta =
-      Math.min(
-        currentTime -
-          lastTime,
-        50
-      ) / 1000;
-
-    lastTime =
-      currentTime;
-
-    tracks.forEach(
-      (
-        track,
-        index
-      ) => {
-        if (
-          paused[index]
-        ) {
-          return;
-        }
-
-        const loopHeight =
-          getLoopHeight(
-            track
-          );
-
-        if (
-          loopHeight <= 0
-        ) {
-          return;
-        }
-
-        const direction =
-          index === 0
-            ? 1
-            : -1;
-
-        positions[index] +=
-          speed *
-          delta *
-          direction;
-
-        if (
-          positions[index] >=
-          loopHeight
-        ) {
-          positions[index] -=
-            loopHeight;
-        }
-
-        if (
-          positions[index] <=
-          -loopHeight
-        ) {
-          positions[index] +=
-            loopHeight;
-        }
-
-        track.style.transform =
-          `translate3d(0, ${-positions[index]}px, 0)`;
+      if (positionRight >= loopHeight) {
+        positionRight -= loopHeight;
       }
-    );
+    }
 
-    animationFrame =
-      requestAnimationFrame(
-        animate
-      );
+    render();
+
+    animationFrame = requestAnimationFrame(animate);
   }
 
-  columns.forEach(
-    (
-      column,
-      index
-    ) => {
-      column.addEventListener(
-        "mouseenter",
-        () => {
-          paused[index] =
-            true;
-        }
-      );
+  /* Hover */
 
-      column.addEventListener(
-        "mouseleave",
-        () => {
-          paused[index] =
-            false;
+  columns[0].addEventListener("mouseenter", () => {
+    pausedLeft = true;
+  });
 
-          lastTime =
-            performance.now();
-        }
-      );
+  columns[0].addEventListener("mouseleave", () => {
+    pausedLeft = false;
+    lastTime = performance.now();
+  });
 
-      column.addEventListener(
-        "touchstart",
-        () => {
-          paused[index] =
-            true;
-        },
-        {
-          passive: true
-        }
-      );
+  columns[1].addEventListener("mouseenter", () => {
+    pausedRight = true;
+  });
 
-      column.addEventListener(
-        "touchend",
-        () => {
-          paused[index] =
-            false;
+  columns[1].addEventListener("mouseleave", () => {
+    pausedRight = false;
+    lastTime = performance.now();
+  });
 
-          lastTime =
-            performance.now();
-        },
-        {
-          passive: true
-        }
-      );
-    }
-  );
+  /* Touch */
 
-  requestAnimationFrame(
+  columns[0].addEventListener(
+    "touchstart",
     () => {
-      tracks.forEach(
-        (
-          track,
-          index
-        ) => {
-          const loopHeight =
-            getLoopHeight(
-              track
-            );
-
-          if (
-            loopHeight <= 0
-          ) {
-            return;
-          }
-
-          if (
-            index === 0
-          ) {
-            positions[index] =
-              loopHeight *
-              0.2;
-          } else {
-            positions[index] =
-              loopHeight *
-              0.65;
-          }
-        }
-      );
-
-      lastTime =
-        performance.now();
-
-      animationFrame =
-        requestAnimationFrame(
-          animate
-        );
-    }
+      pausedLeft = true;
+    },
+    { passive: true },
   );
 
+  columns[0].addEventListener(
+    "touchend",
+    () => {
+      pausedLeft = false;
+      lastTime = performance.now();
+    },
+    { passive: true },
+  );
 
-  /* Gallery Popup */
+  columns[1].addEventListener(
+    "touchstart",
+    () => {
+      pausedRight = true;
+    },
+    { passive: true },
+  );
 
-  const modal =
-    document.getElementById(
-      "galleryModal"
-    );
+  columns[1].addEventListener(
+    "touchend",
+    () => {
+      pausedRight = false;
+      lastTime = performance.now();
+    },
+    { passive: true },
+  );
 
-  const modalImage =
-    document.getElementById(
-      "galleryModalImage"
-    );
+  /* Initialize */
 
-  const modalClose =
-    document.getElementById(
-      "galleryModalClose"
-    );
+  function initGallery() {
+    calculateLoopHeight();
 
-  if (
-    modal &&
-    modalImage
-  ) {
-    gallery.addEventListener(
-      "click",
-      (event) => {
-        const image =
-          event.target.closest(
-            ".gallery-image"
-          );
+    if (loopHeight <= 0) {
+      requestAnimationFrame(initGallery);
+      return;
+    }
 
-        if (!image) {
-          return;
-        }
+    // Left starts inside first sequence
+    positionLeft = loopHeight * 0.2;
 
-        const imagePath =
-          image.dataset
-            .image;
+    // Right starts inside second sequence
+    positionRight = -loopHeight * 0.65;
 
-        if (!imagePath) {
-          return;
-        }
+    render();
 
-        const source =
-          image.querySelector(
-            "img"
-          );
+    lastTime = performance.now();
 
-        modalImage.src =
-          imagePath;
+    animationFrame = requestAnimationFrame(animate);
+  }
 
-        modalImage.alt =
-          source
-            ? source.alt
-            : "";
+  window.addEventListener("resize", () => {
+    calculateLoopHeight();
+  });
 
-        modal.classList.add(
-          "active"
-        );
+  initGallery();
 
-        modal.setAttribute(
-          "aria-hidden",
-          "false"
-        );
+  /* Popup */
 
-        document.body.style.overflow =
-          "hidden";
-      }
-    );
+  const modal = document.getElementById("galleryModal");
+
+  const modalImage = document.getElementById("galleryModalImage");
+
+  const modalClose = document.getElementById("galleryModalClose");
+
+  if (modal && modalImage) {
+    gallery.addEventListener("click", (event) => {
+      const image = event.target.closest(".gallery-image");
+
+      if (!image) return;
+
+      const imagePath = image.dataset.image;
+
+      if (!imagePath) return;
+
+      const source = image.querySelector("img");
+
+      modalImage.src = imagePath;
+      modalImage.alt = source ? source.alt : "";
+
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+
+      document.body.style.overflow = "hidden";
+    });
 
     function closeGalleryModal() {
-      modal.classList.remove(
-        "active"
-      );
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
 
-      modal.setAttribute(
-        "aria-hidden",
-        "true"
-      );
+      modalImage.src = "";
 
-      document.body.style.overflow =
-        "";
+      document.body.style.overflow = "";
     }
 
     if (modalClose) {
-      modalClose.addEventListener(
-        "click",
-        closeGalleryModal
-      );
+      modalClose.addEventListener("click", closeGalleryModal);
     }
 
-    modal.addEventListener(
-      "click",
-      (event) => {
-        if (
-          event.target ===
-          modal
-        ) {
-          closeGalleryModal();
-        }
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        closeGalleryModal();
       }
-    );
+    });
 
-    document.addEventListener(
-      "keydown",
-      (event) => {
-        if (
-          event.key ===
-          "Escape"
-        ) {
-          closeGalleryModal();
-        }
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("active")) {
+        closeGalleryModal();
       }
-    );
+    });
   }
 
-
-  window.addEventListener(
-    "beforeunload",
-    () => {
-      if (
-        animationFrame
-      ) {
-        cancelAnimationFrame(
-          animationFrame
-        );
-      }
+  window.addEventListener("beforeunload", () => {
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
     }
-  );
+  });
 });
 
 //Testimonials Section
@@ -734,12 +659,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let targetPosition = 0;
   let animationFrame = null;
 
-  const depth = 220;
-  const spread = 90;
-  const tilt = 22;
+  const depth = 280;
+  const spread = 160;
+  const tilt = 360;
   const visibleCards = 3;
   const falloff = 0.2;
-  const blur = 6;
+  const blur = 10;
   const duration = 650;
 
   function normalizeIndex(index) {
@@ -754,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (count > 1) {
       distance = ((distance % count) + count) % count;
 
-      if (distance > count / 2) {
+      if (distance > count / 0.5) {
         distance -= count;
       }
     }
@@ -791,7 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? Math.min(blur, (back / Math.max(1, visibleCards)) * blur)
           : 0;
 
-      const zIndex = Math.round(2000 - distance * 20);
+      const zIndex = Math.round(2000 - distance * 10);
 
       card.style.transform = `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`;
 

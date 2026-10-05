@@ -15,7 +15,10 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -26,31 +29,89 @@
       <div class="container nav-wrap">
         <a class="brand" href="#top" aria-label="STR INNOVATION home">
           <img src="assets/str-logo.png" alt="STR INNOVATION logo" />
-          <span>STR <b>INNOVATION</b></span>
+
+          <span> STR <b>INNOVATION</b> </span>
         </a>
+
+        <!-- Desktop Navigation -->
+
         <nav class="desktop-nav">
-          <a href="#about">About</a>
-          <a href="#services">Services</a>
-          <a href="#what-we-do">What We Do</a>
-          <a href="#gallery">Gallery</a>
-          <a href="#contact">Contact</a>
+          <a href="#about"> About </a>
+
+          <a href="#services"> Services </a>
+
+          <a href="#what-we-do"> What We Do </a>
+
+          <a href="#gallery"> Gallery </a>
+
+          <a href="#contact"> Contact </a>
         </nav>
-        <a class="nav-cta" href="#contact">Enquire <span>↗</span></a>
+
+        <!-- Desktop CTA -->
+
+        <a class="nav-cta" href="#contact">
+          Enquire
+          <span>↗</span>
+        </a>
+
+        <!-- Mobile / Tablet Toggle -->
+
         <button
           class="menu-toggle"
+          type="button"
           aria-label="Open menu"
           aria-expanded="false"
+          aria-controls="mobileMenu"
         >
-          <i></i><i></i>
+          <i></i>
+          <i></i>
         </button>
       </div>
-      <div class="mobile-menu">
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#what-we-do">What We Do</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#testimonials">Testimonials</a>
-        <a href="#contact">Contact</a>
+
+      <!-- Full Screen Mobile Menu -->
+
+      <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-inner">
+          <p class="mobile-menu-label">MENU</p>
+
+          <nav class="mobile-nav">
+            <a href="#about">
+              <span>01</span>
+              About
+            </a>
+
+            <a href="#services">
+              <span>02</span>
+              Services
+            </a>
+
+            <a href="#what-we-do">
+              <span>03</span>
+              What We Do
+            </a>
+
+            <a href="#gallery">
+              <span>04</span>
+              Gallery
+            </a>
+
+            <a href="#testimonials">
+              <span>05</span>
+              Testimonials
+            </a>
+
+            <a href="#contact">
+              <span>06</span>
+              Contact
+            </a>
+          </nav>
+
+          <div class="mobile-menu-footer">
+            <span> PRECISION ENGINEERING </span>
+
+            <span> HOSUR · INDIA </span>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -280,7 +341,7 @@
             <div class="services-grid">
               <article class="service-card">
                 <span class="service-no">01</span>
-                <h3>Plastic Molding<br />Tooling & Dies</h3>
+                <h3>Tooling & plastic Molding Dies</h3>
                 <p>
                   High-precision injection molds, single & multi-cavity tooling,
                   and hot/cold runner systems for consistent production.
@@ -290,7 +351,7 @@
 
               <article class="service-card">
                 <span class="service-no">02</span>
-                <h3>Aluminium Die<br />Casting Dies</h3>
+                <h3>Aluminium Die Casting Dies</h3>
                 <p>
                   Robust die casting dies optimized for longer die life and
                   efficient automotive, electrical and industrial production.
@@ -300,7 +361,7 @@
 
               <article class="service-card">
                 <span class="service-no">03</span>
-                <h3>Press Tool<br />Dies</h3>
+                <h3>Press Tool Dies</h3>
                 <p>
                   Progressive and single-stage press tooling designed for
                   high-accuracy sheet metal components.
@@ -310,7 +371,7 @@
 
               <article class="service-card">
                 <span class="service-no">04</span>
-                <h3>Machining &<br />Assembly Fixtures</h3>
+                <h3>Machining & Assembly Fixtures</h3>
                 <p>
                   Custom fixtures for CNC machining, inspection and assembly
                   processes built around client-specific requirements.
@@ -320,7 +381,7 @@
 
               <article class="service-card">
                 <span class="service-no">05</span>
-                <h3>Production-based<br />Machining</h3>
+                <h3>Production-based Machining</h3>
                 <p>
                   CNC machining for small to medium batch production with
                   competitive pricing and strict quality checks.
@@ -330,7 +391,7 @@
 
               <article class="service-card">
                 <span class="service-no">06</span>
-                <h3>Complex Profile<br />Machining</h3>
+                <h3>Complex Profile Machining</h3>
                 <p>
                   Precision machining for complex shapes and contours across
                   specialized engineering and automotive components.
@@ -495,7 +556,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-1.jpeg"
-                      alt="CNC machining center"
+                      alt="Gallery image 1"
                       draggable="false"
                     />
                   </button>
@@ -507,7 +568,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-2.jpeg"
-                      alt="Precision ring component"
+                      alt="Gallery image 2"
                       draggable="false"
                     />
                   </button>
@@ -519,7 +580,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-3.jpeg"
-                      alt="Die components"
+                      alt="Gallery image 3"
                       draggable="false"
                     />
                   </button>
@@ -531,7 +592,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-4.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 4"
                       draggable="false"
                     />
                   </button>
@@ -543,11 +604,11 @@
                   >
                     <img
                       src="assets/gallery/gallery-5.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 5"
                       draggable="false"
                     />
                   </button>
-                  
+
                   <button
                     class="gallery-image"
                     type="button"
@@ -555,7 +616,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-6.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 6"
                       draggable="false"
                     />
                   </button>
@@ -567,7 +628,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-7.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 7"
                       draggable="false"
                     />
                   </button>
@@ -579,7 +640,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-8.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 8"
                       draggable="false"
                     />
                   </button>
@@ -591,7 +652,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-9.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 9"
                       draggable="false"
                     />
                   </button>
@@ -603,83 +664,11 @@
                   <button
                     class="gallery-image"
                     type="button"
-                    data-image="assets/gallery/gallery-9.jpeg"
+                    data-image="assets/gallery/gallery-1.jpeg"
                   >
                     <img
-                      src="assets/gallery/gallery-9.jpeg"
-                      alt="CNC machining center"
-                      draggable="false"
-                    />
-                  </button>
-
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-8.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-8.jpeg"
-                      alt="Precision ring component"
-                      draggable="false"
-                    />
-                  </button>
-
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-7.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-7.jpeg"
-                      alt="Die components"
-                      draggable="false"
-                    />
-                  </button>
-
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-6.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-6.jpeg"
-                      alt="Precision shafts and gears"
-                      draggable="false"
-                    />
-                  </button>
-
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-5.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-5.jpeg"
-                      alt="Precision shafts and gears"
-                      draggable="false"
-                    />
-                  </button>
-                  
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-4.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-4.jpeg"
-                      alt="Precision shafts and gears"
-                      draggable="false"
-                    />
-                  </button>
-
-                  <button
-                    class="gallery-image"
-                    type="button"
-                    data-image="assets/gallery/gallery-3.jpeg"
-                  >
-                    <img
-                      src="assets/gallery/gallery-3.jpeg"
-                      alt="Precision shafts and gears"
+                      src="assets/gallery/gallery-1.jpeg"
+                      alt="Gallery image 1"
                       draggable="false"
                     />
                   </button>
@@ -691,7 +680,7 @@
                   >
                     <img
                       src="assets/gallery/gallery-2.jpeg"
-                      alt="Precision shafts and gears"
+                      alt="Gallery image 2"
                       draggable="false"
                     />
                   </button>
@@ -699,11 +688,83 @@
                   <button
                     class="gallery-image"
                     type="button"
-                    data-image="assets/gallery/gallery-1.jpeg"
+                    data-image="assets/gallery/gallery-3.jpeg"
                   >
                     <img
-                      src="assets/gallery/gallery-1.jpeg"
-                      alt="Precision shafts and gears"
+                      src="assets/gallery/gallery-3.jpeg"
+                      alt="Gallery image 3"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-4.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-4.jpeg"
+                      alt="Gallery image 4"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-5.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-5.jpeg"
+                      alt="Gallery image 5"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-6.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-6.jpeg"
+                      alt="Gallery image 6"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-7.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-7.jpeg"
+                      alt="Gallery image 7"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-8.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-8.jpeg"
+                      alt="Gallery image 8"
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    class="gallery-image"
+                    type="button"
+                    data-image="assets/gallery/gallery-9.jpeg"
+                  >
+                    <img
+                      src="assets/gallery/gallery-9.jpeg"
+                      alt="Gallery image 9"
                       draggable="false"
                     />
                   </button>
@@ -853,7 +914,9 @@
       <section class="contact section-dark section-pad" id="contact">
         <div class="container contact-grid">
           <div class="contact-intro reveal">
-            <p class="eyebrow gold"><span></span>LET'S BUILD SOMETHING PRECISE</p>
+            <p class="eyebrow gold">
+              <span></span>LET'S BUILD SOMETHING PRECISE
+            </p>
             <h2>Have a tooling or <em>machining requirement?</em></h2>
             <p>
               Tell us what you need. We will connect with you to understand the
@@ -1022,13 +1085,15 @@
 
         <div class="footer-developer">
           Designed &amp; developed by
-          <a href="#" aria-label="Dazzle Tech Solutions">
+          <a
+            href="https://dazzletechsolutions.com/"
+            aria-label="Dazzle Tech Solutions"
+          >
             Dazzle Tech Solutions
           </a>
         </div>
       </div>
     </footer>
-
 
     <!-- WhatsApp Floating Buttons -->
     <div class="whatsapp-floating">
