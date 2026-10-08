@@ -173,36 +173,6 @@ if (revealElements.length) {
   });
 }
 
-const contactForm = document.querySelector("#contactForm");
-
-if (contactForm) {
-  contactForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const data = new FormData(event.currentTarget);
-
-    const name = data.get("name") || "";
-    const company = data.get("company") || "";
-    const email = data.get("email") || "";
-    const phone = data.get("phone") || "";
-    const message = data.get("message") || "";
-
-    const subject = encodeURIComponent(`STR INNOVATION Enquiry - ${name}`);
-
-    const bodyText = encodeURIComponent(
-      `Name: ${name}
-Company: ${company}
-Email: ${email}
-Phone: ${phone}
-
-Requirement:
-${message}`,
-    );
-
-    window.location.href = `mailto:strinnovation26@gmail.com?subject=${subject}&body=${bodyText}`;
-  });
-}
-
 const yearElement = document.querySelector("#year");
 
 if (yearElement) {
